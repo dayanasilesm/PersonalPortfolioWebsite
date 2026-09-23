@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'tailwindcss';
+
+@theme inline {
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: #100B0E;
+  color: #F2EBEd;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #100B0E; }
+::-webkit-scrollbar-thumb { background: rgba(196,118,138,0.3); border-radius: 2px; }
+
+/* ────────────────────────────────────────
+   PALETTE (dark)
+   bg        #100B0E   deep warm black
+   card      #1A1117
+   rose      #C4768A   dusty rose / primary
+   blush     #E0A0B2   blush pink
+   cream     #F5D0DA   soft highlight
+   plum      #7A3D52   deep rose
+   text-1    #F2EBED   warm cream white
+   text-2    #9A8088   muted rose-gray
+   text-3    #4A3040   dim
+   border    rgba(196,118,138,0.11)
+
+   PALETTE (light)
+   bg        #FBF6F8
+   card      #FFFFFF
+   text-1    #1A0F14
+   text-2    #6B505A
+──────────────────────────────────────── */
+
+/* ── Gradient text ── */
+.g-text {
+  background: linear-gradient(110deg, #C4768A 0%, #E0A0B2 55%, #C4768A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Button system — clean tonal borders only ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border-radius: 5px;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.12s;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: none; }
+
+/* Primary — filled rose */
+.btn-primary {
+  background: #C4768A;
+  border-color: #C4768A;
+  color: #fff;
+}
+.btn-primary:hover { background: #CF8396; border-color: #CF8396; }
+
+/* Outline — tonal rose border */
+.btn-outline {
+  background: transparent;
+  border-color: rgba(196,118,138,0.35);
+  color: #C4768A;
+}
+.btn-outline:hover { border-color: #C4768A; background: rgba(196,118,138,0.06); }
+
+/* Ghost — very subtle border */
+.btn-ghost {
+  background: transparent;
+  border-color: rgba(242,235,237,0.14);
+  color: rgba(242,235,237,0.6);
+}
+.btn-ghost:hover { border-color: rgba(242,235,237,0.28); color: #F2EBED; background: rgba(242,235,237,0.04); }
+
+/* Light variants */
+.light .btn-ghost { border-color: rgba(26,15,20,0.12); color: #6B505A; }
+.light .btn-ghost:hover { border-color: rgba(26,15,20,0.25); color: #1A0F14; background: rgba(26,15,20,0.04); }
+.light .btn-outline { border-color: rgba(196,118,138,0.3); color: #A05568; }
+.light .btn-outline:hover { border-color: #C4768A; background: rgba(196,118,138,0.05); }
+
+/* ── Cards ── */
+.card {
+  background: #1A1117;
+  border: 1px solid rgba(196,118,138,0.11);
+  border-radius: 8px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(196,118,138,0.24);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.25);
+}
+.light .card { background: #FFFFFF; border-color: rgba(0,0,0,0.07); box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05); }
+.light .card:hover { border-color: rgba(196,118,138,0.28); box-shadow: 0 8px 28px rgba(196,118,138,0.10), 0 2px 6px rgba(0,0,0,0.06); }
+
+/* ── Photo frame ── */
+.photo-frame {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(196,118,138,0.22);
+  position: relative;
+}
+
+/* ── Tag pills ── */
+.tag {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.675rem;
+  font-weight: 500;
+  background: rgba(196,118,138,0.08);
+  border: 1px solid rgba(196,118,138,0.17);
+  color: #E0A0B2;
+}
+.light .tag { background: rgba(196,118,138,0.07); border-color: rgba(196,118,138,0.2); color: #A05568; }
+
+/* ── Section label ── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #C4768A;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* ── Hero entry animations (play immediately) ── */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.au   { animation: slide-up 0.5s ease-out both; }
+.au-1 { animation: slide-up 0.5s 0.08s ease-out both; }
+.au-2 { animation: slide-up 0.5s 0.18s ease-out both; }
+.au-3 { animation: slide-up 0.5s 0.30s ease-out both; }
+
+/* ── Scroll-triggered animations ── */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes reveal-left {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes reveal-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes reveal-scale {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Initial hidden state */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: none;
+}
+.scroll-reveal-left  { opacity: 0; transform: translateX(-24px); }
+.scroll-reveal-right { opacity: 0; transform: translateX(24px); }
+.scroll-reveal-scale { opacity: 0; transform: scale(0.94); }
+
+/* Visible state — added by JS */
+.scroll-reveal.is-visible {
+  animation: reveal-up    0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+.scroll-reveal-left.is-visible {
+  animation: reveal-left  0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+.scroll-reveal-right.is-visible {
+  animation: reveal-right 0.55s cubic-bezier(0.22,1,0.36,1) both;
+}
+.scroll-reveal-scale.is-visible {
+  animation: reveal-scale 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* Staggered delays for child groups */
+.scroll-reveal.delay-1, .scroll-reveal-scale.delay-1 { animation-delay: 0.07s; }
+.scroll-reveal.delay-2, .scroll-reveal-scale.delay-2 { animation-delay: 0.14s; }
+.scroll-reveal.delay-3, .scroll-reveal-scale.delay-3 { animation-delay: 0.21s; }
+.scroll-reveal.delay-4, .scroll-reveal-scale.delay-4 { animation-delay: 0.28s; }
+.scroll-reveal.delay-5, .scroll-reveal-scale.delay-5 { animation-delay: 0.35s; }
+.scroll-reveal.delay-6, .scroll-reveal-scale.delay-6 { animation-delay: 0.42s; }
+
+/* Override Bootstrap's dark body-color in dark mode */
+body:not(.light) {
+  --bs-body-color: #F2EBED;
+  --bs-body-color-rgb: 242,235,237;
+  color: #F2EBED;
+}
+
+/* ── Light mode root ── */
+.light { background: #FBF6F8; color: #1A0F14; }

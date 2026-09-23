@@ -1,0 +1,10 @@
+{
+  "description": "Showcase your expertise as a Senior Frontend & UI Engineer with a modern portfolio featuring projects, skills, and a streamlined contact experience.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
