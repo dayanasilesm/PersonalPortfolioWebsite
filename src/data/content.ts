@@ -1,3 +1,5 @@
+import { personalProfile } from "./profile";
+
 export type ProjectCategory = "Angular" | "React" | "UI/UX Design";
 
 export interface SkillCategory {
@@ -15,6 +17,7 @@ export interface ProjectItem {
   title: string;
   description: string;
   tags: string[];
+  details?: string[];
 }
 
 export interface TimelineItem {
@@ -40,15 +43,15 @@ export const portfolioContent = {
     contact: "Contact",
   },
   brand: {
-    initials: "DS",
-    name: "Dayana Siles",
+    initials: personalProfile.initials,
+    name: personalProfile.fullName,
   },
   hero: {
-    firstName: "Dayana",
-    lastName: "Siles",
-    availability: "Available · Remote / Full-time",
-    role: "Senior Frontend & UI Engineer · Angular & React Specialist",
-    introduction: "6+ years building enterprise web applications, architecting design systems, and bridging the gap between",
+    firstName: personalProfile.firstName,
+    lastName: personalProfile.lastName,
+    availability: `Available · ${personalProfile.availability}`,
+    role: personalProfile.professionalTitle,
+    summary: "Frontend Developer with over 6 years of experience designing and building enterprise web applications, with deep specialization in Angular. Proven track record modernizing legacy architectures, adopting Angular's latest features (Standalone Components, Signals, Control Flow), and integrating frontend applications with REST APIs and reactive data flows (RxJS, Observables). Strong background in reusable component design, state management (NgRx), CI/CD pipelines (Jenkins), containerized development workflows (Docker), and close collaboration with product and design teams, including experience as a Frontend Technical Lead mentoring junior developers. Combines solid engineering judgment with a UX-oriented mindset and professional working proficiency in English to deliver products that are fast, intuitive, and easy to maintain. Currently pursuing a Master's Degree in Software Product Development with Artificial Intelligence to expand into AI-driven engineering practices.",
     softwareEngineering: "Software Engineering",
     and: "and",
     userExperienceDesign: "UI/UX Design",
@@ -65,20 +68,25 @@ export const portfolioContent = {
     },
     projects: {
       label: "Featured Projects",
-      title: "Case Studies",
+      title: "Projects & Case Studies",
       description: "Enterprise applications, design systems, and user-centric experiences built at scale.",
       filterLabel: "Filter projects",
-      filterOptions: ["All", "Angular", "React", "UI/UX Design"] as const,
+      filterOptions: ["All"] as const,
       emptyResults: "No projects found for this filter.",
-      caseStudy: "Case Study",
-      liveDemo: "Live Demo ↗",
-      github: "GitHub ↗",
+      viewDetails: "View details",
+      detailsTitle: "Project details",
+      detailsHint: "Select a project to see its responsibilities, decisions, and impact.",
     },
     experience: {
-      label: "Experience & Education",
+      label: "Professional Experience",
       title: "The Journey",
-      description: "From junior engineer to technical lead — a career defined by continuous learning.",
+      description: "From junior engineer to technical lead - a career defined by continuous learning.",
       currentLabel: "Now",
+    },
+    education: {
+      label: "Education & Certifications",
+      title: "Professional Formation",
+      description: "Academic degrees, postgraduate programs, certifications, and continuing education.",
     },
     designSystem: {
       label: "UI/UX Process & Design System",
@@ -98,7 +106,7 @@ export const portfolioContent = {
     contact: {
       label: "Get In Touch",
       title: "Let's Build Something",
-      description: "Open to senior frontend roles, design system projects, and consulting. Based in Cochabamba, Bolivia — remote or full-time.",
+      description: "Open to senior frontend roles, design system projects, and consulting. Based in Cochabamba, Bolivia - remote or full-time.",
       formLabel: "Contact form",
       nameLabel: "Name",
       namePlaceholder: "Your full name",
@@ -113,8 +121,8 @@ export const portfolioContent = {
       directContact: "Direct Contact",
       preferredMethod: "Preferred method",
       location: "Location",
-      locationValue: "Cochabamba, Bolivia",
-      remoteAvailability: "Remote / Full-time available",
+      locationValue: personalProfile.location,
+      remoteAvailability: personalProfile.availability,
       responseTime: "Response time",
       typicalReplyTime: "Typical reply time",
       responseTimeValue: "< 24 hours",
@@ -156,7 +164,7 @@ export const portfolioContent = {
       year: "2024",
       metric: "+20% Perf",
       title: "Zack Report Generator",
-      description: "Enterprise report platform integrated with Microsoft Teams. Rebuilt with Angular v20 Standalone, Signals, and deferred loading — delivering a 20% performance boost.",
+      description: "Enterprise report platform integrated with Microsoft Teams. Rebuilt with Angular v20 Standalone, Signals, and deferred loading - delivering a 20% performance boost.",
       tags: ["Angular v20", "Signals", "Standalone", "MS Teams", "TypeScript"],
     },
     {
@@ -181,7 +189,7 @@ export const portfolioContent = {
   timeline: [
     {
       id: "jalasoft-technical-lead",
-      period: "2023 — Present",
+      period: "2023 - Present",
       type: "work",
       current: true,
       role: "Technical Lead & Frontend Engineer",
@@ -190,7 +198,7 @@ export const portfolioContent = {
     },
     {
       id: "uwe-masters-ai",
-      period: "2024 — 2025",
+      period: "2024 - 2025",
       type: "education",
       current: false,
       role: "M.Sc. in AI Software Product Development",
@@ -199,7 +207,7 @@ export const portfolioContent = {
     },
     {
       id: "jalasoft-senior-developer",
-      period: "2021 — 2023",
+      period: "2021 - 2023",
       type: "work",
       current: false,
       role: "Senior Frontend Developer",
@@ -217,7 +225,7 @@ export const portfolioContent = {
     },
     {
       id: "jalasoft-frontend-developer",
-      period: "2019 — 2021",
+      period: "2019 - 2021",
       type: "work",
       current: false,
       role: "Frontend Developer",
@@ -250,17 +258,18 @@ export const portfolioContent = {
     ],
   },
   contactDetails: [
-    { label: "Email", value: "dayana.siles@email.com", description: "Preferred method" },
-    { label: "Location", value: "Cochabamba, Bolivia", description: "Remote / Full-time available" },
+    { label: "Email", value: personalProfile.email, description: "Preferred method" },
+    { label: "Location", value: personalProfile.location, description: personalProfile.availability },
+    { label: "Phone", value: personalProfile.phone ?? "", description: "Available by WhatsApp or phone" },
     { label: "Response time", value: "< 24 hours", description: "Typical reply time" },
   ],
   socialLinks: [
-    { label: "LinkedIn", handle: "/in/dayana-siles" },
-    { label: "GitHub", handle: "github.com/dayanasiles" },
-    { label: "Figma Community", handle: "@dayana.siles" },
+    { ...personalProfile.links.linkedin },
+    { ...personalProfile.links.github },
+    { ...personalProfile.links.figma },
   ],
   footer: {
-    copyright: "© 2026 Dayana Siles · Senior Frontend & UI Engineer · Cochabamba, Bolivia",
+    copyright: `© 2026 ${personalProfile.fullName} · ${personalProfile.professionalTitle} · ${personalProfile.location}`,
     technologies: ["Angular", "React", "Figma"],
   },
 } as const;

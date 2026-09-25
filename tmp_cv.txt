@@ -1,0 +1,136 @@
+Dayana Alice Siles Miranda
+Frontend Developer
+dayana.siles.m@gmail.com | +591 69471893 | linkedin.com/in/dayana-siles-dev | Cochabamba, Bolivia
+Available for full-time engagements
+Summary
+Frontend Developer with over 6 years of experience designing and building enterprise web applications,
+with deep specialization in Angular. Proven track record modernizing legacy architectures, adopting
+Angular's latest features (Standalone Components, Signals, Control Flow), and integrating frontend ap-
+plications with REST APIs and reactive data ows (RxJS, Observables). Strong background in reusable
+component design, state management (NgRx), CI/CD pipelines (Jenkins), containerized development
+workows (Docker), and close collaboration with product and design teams, including experience as
+a Frontend Technical Lead mentoring junior developers. Combines solid engineering judgment with a
+UX-oriented mindset and professional working prociency in English to deliver products that are fast,
+intuitive, and easy to maintain. Currently pursuing a Master's Degree in Software Product Development
+with Articial Intelligence to expand into AI-driven engineering practices.
+Technical Skills
+Angular & Core Angular (v10v20, 6+ yrs), TypeScript (6+ yrs), JavaScript (6+ yrs), HTML5 (6+
+yrs), CSS3/SCSS (BEM) (6+ yrs), RxJS & Observables, NgRx, Angular Material, Standalone Compo-
+nents, Signals, Angular Control Flow, Micro-frontends
+Other Frameworks React.js, Tailwind CSS, Bootstrap, Leaet
+Languages / Backend Python, Java, REST API integration
+Databases PostgreSQL, MongoDB, IndexedDB
+Version Control & PM Git, GitLab, GitHub, Bitbucket, Jira
+CI/CD & DevOps Docker, Jenkins
+Testing Jest, Jasmine, Karma
+Dev Tooling & Quality Husky, Commitlint, ESLint, VS Code, Postman, Swagger, Claude Code,
+Antigravity, Codex, Cursor
+Design & Backend Figma, Firebase
+UX / Design Design Systems & shared UI component libraries, high-delity prototyping (Figma),
+interaction design, accessibility (WCAG/a11y), direct collaboration with product & design teams; UX/UI
+fundamentals applied on the Vipre project (∼2 yrs)
+Languages Spoken English  professional working prociency (advanced reading & writing, inter-
+mediate listening & speaking)
+Professional Experience
+Frontend Developer 2026  Present
+Jalasoft
+Project: Zack  report generator and appointment scheduling application integrated with Microsoft
+Teams.
+ Led the Angular version upgrade from v16 to v20 and the migration from NgModules to Standalone
+Components  my main responsibility on this project.
+ Introduced Angular Signals and established the new Angular Control Flow (@if, @for, @defer) as the
+project standard, improving template readability and rendering performance.
+ Integrated the frontend with REST APIs (Microsoft Graph/Teams) to automate meeting creation and
+retrieve post-meeting data.
+ Built features to extract, process, and display post-meeting data and attendance reports.
+ Refactored legacy code into generic, reusable components adaptable to multiple views.
+ Used Docker to containerize and run the local development environment, ensuring consistency across
+the team.
+ Reduced initial load time by 20% through lazy loading, @defer views, and the OnPush change-detection
+strategy; contributed to improving the development team's overall performance and delivery eciency.
+ Collaborated directly with product and design teams to translate requirements into frontend solutions,
+ensuring UI/UX consistency by combining Tailwind CSS, Angular Material, and Bootstrap.
+ Set up Husky, Commitlint, and ESLint to improve developer experience and enforce a standardized
+commit history.
+ Maintained and improved unit testing with Jest, ensuring the CI pipeline validated all test cases and
+preserved code coverage.
+ Leveraged AI coding agents  Claude Code and Antigravity  to accelerate development tasks, speed
+up the Angular v16 to v20 migration, and automate repetitive refactoring work.
+Stack: TypeScript, HTML5, SCSS (BEM), Angular (v14v20), Angular Material, Tailwind CSS, RxJS, NgRx, Jest,
+Docker, Git/GitLab, MongoDB, PostgreSQL, Figma, Claude Code, Antigravity.
+Frontend Developer 2021  2025
+Jalasoft
+Project: Vipre  antivirus management and service-controller web app built on a Micro-frontend
+architecture.
+ Stayed on this project for almost four years, gaining deep architectural ownership and full product-
+lifecycle experience; also gained applied UX/design experience (∼2 yrs) collaborating on interface and
+usability decisions.
+ Acted as Frontend Technical Lead for a period, driving architectural decisions, delegating tasks, and
+ensuring the team met technical standards and deadlines.
+ Mentored 3 junior developers, providing technical guidance and support.
+ Conducted advanced code reviews on Bitbucket Merge Requests, validating design patterns, clean-code
+principles, and team guidelines.
+ Introduced the new Angular Control Flow as a team-wide development standard.
+ Refactored complex modules using the Smart/Dumb component pattern, creating generic, presenta-
+tional components adaptable to any data type.
+ Architected and maintained a shared UI component library  functioning as a lightweight design
+system  ensuring visual and structural consistency across multiple Micro-frontends.
+ Developed an advanced search feature supporting boolean logic (AND/OR/NOT), with a custom parser
+translating user input into KQL (Kibana Query Language).
+ Managed global state and reactive side eects using NgRx (Store, Selectors, Eects) and RxJS Ob-
+servables for asynchronous data ows.
+ Built a scalable SCSS architecture using BEM methodology and modern @use modules to avoid style
+conicts.
+ Used Docker to run and standardize local development and testing environments across the team.
+ Monitored CI/CD builds and jobs in Jenkins, tracking pipeline status and following up on failures to
+keep deployments unblocked.
+ Wrote and maintained unit tests with Jest, Jasmine, and Karma to ensure code stability across CI/CD
+deployments.
+Stack: Angular, NgRx, RxJS, TypeScript, SCSS (BEM), Jest, Jasmine, Karma, Docker, Jenkins, Bitbucket, An-
+gular Material, Figma, Jira.
+Frontend Developer 2020  2021
+Jalasoft  SES
+Project: Traveler oine-rst Progressive Web App (PWA) with mapping for mobile users.
+ Engineered a PWA ensuring a seamless, responsive experience across devices and under unstable net-
+work conditions.
+ Implemented oine-rst capabilities, persisting map data locally with IndexedDB.
+ Integrated interactive, fully oine maps using Leaet.
+ Congured Service Workers to manage caching strategies for fast, reliable reloads.
+Stack: Angular (v10/v12), Leaet, IndexedDB, Figma, GitLab.
+Full Stack Developer / Lead Software Developer 2017  2019
+Jala Foundation
+ Led development from conception to deployment across several SCRUM projects, covering both fron-
+tend and backend.
+ Designed and developed responsive, user-friendly interfaces in Angular for event tracking and manage-
+ment.
+ Built and maintained RESTful backend services in Python.
+ Designed the relational database architecture and optimized SQL queries.
+ Managed the application lifecycle, including CI/CD pipelines in GitLab.
+Stack: Angular, React.js, Python, GitLab.
+Education & Certifications
+Master's Degree in Software Product Development with Arti-
+cial Intelligence Oct 2025  Expected Jun 2027
+Universidad Mayor de San Simón (UMSS), Cochabamba, Bolivia
+Claude Code in Action •
+AI Fluency: Framework & Foundation •
+Introduction to
+Agent Skills 2026
+Anthropic
+Advanced React 2026
+Meta, via Coursera
+Postgraduate Diploma, AI & Technological Innovation in Higher Education 2025
+Universidad Mayor de San Simón (UMSS)
+Data Privacy & Cybersecurity Compliance (GDPR, CCPA, FERPA) 2024  2025
+Zi Davis / Jala University
+Google UX Design Professional Certicate 2022  2025
+Google, via Coursera  end-to-end UX process: research, empathy maps, high-delity prototyping and
+usability testing in Figma
+Postgraduate Diploma, UX/UI Design for Digital Product Development 2024
+Universidad del Valle (UNIVALLE), Sucre, Bolivia
+Postgraduate Diploma, Enterprise Application Development 2021  2022
+Universidad Mayor de San Simón (UMSS)  Full-stack development with Java & Angular
+Bachelor of Systems Engineering 2016  2022
+Universidad Mayor de San Simón (UMSS), Cochabamba, Bolivia
+Softure 07  Software Engineering Specialization Program 2017  2020
+Jala Foundation  3-year intensive program in commercial-standard software engineering practices
+

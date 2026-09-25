@@ -20,6 +20,10 @@ body {
   font-family: var(--font-body);
   background: #100B0E;
   color: #F2EBEd;
+  --bs-primary: #7A3D52;
+  --bs-primary-rgb: 122, 61, 82;
+  --bs-link-color: #7A3D52;
+  --bs-link-hover-color: #7A3D52;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -78,6 +82,13 @@ body {
 .btn-primary:hover {
   background: #CF8396;
   border-color: #CF8396;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+  background: #7A3D52;
+  border-color: #7A3D52;
 }
 
 .btn-outline {
@@ -421,4 +432,20 @@ body:not(.light) {
 .availability-notice {
   background: rgba(196, 118, 138, 0.05);
   border: 1px solid rgba(196, 118, 138, 0.15);
+}
+
+/* Keep active and selected controls on the portfolio palette. */
+.active,
+[aria-current="page"],
+.form-check-input:checked,
+.form-check-input:focus,
+.nav-link.active {
+  --bs-primary: #7A3D52;
+  --bs-primary-rgb: 122, 61, 82;
+  color: #7A3D52;
+}
+
+.form-check-input:checked {
+  background-color: #7A3D52;
+  border-color: #7A3D52;
 }

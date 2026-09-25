@@ -14,29 +14,30 @@ import {
 } from "lucide-react";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa";
 import { SiFigma } from "react-icons/si";
-import myPhoto from "./assets/images/my-photo.jpg";
 import { portfolioContent, type ProjectCategory } from "./data/content";
+import { personalProfile } from "./data/profile";
+import { resumeContent } from "./data/resume";
 
 const ROSE = "#C4768A";
 const BLUSH = "#E0A0B2";
 const CREAM = "#be6f84ff";
 const PLUM = "#7A3D52";
+const DISABLED_SECTIONS = new Set(["experience", "design-system"]);
 
 type Filter = "All" | ProjectCategory;
 
 const NAV = [
   { label: portfolioContent.navigation.projects, id: "projects" },
-  { label: portfolioContent.navigation.experience, id: "experience" },
+  { label: "Education", id: "education" },
   { label: portfolioContent.navigation.skills, id: "skills" },
-  { label: portfolioContent.navigation.designSystem, id: "design-system" },
   { label: portfolioContent.navigation.contact, id: "contact" },
 ] as const;
 
-const SKILLS = portfolioContent.skills;
+const SKILLS = resumeContent.skills;
 
-const PROJECTS = portfolioContent.projects;
+const PROJECTS = resumeContent.projects;
 
-const TIMELINE = portfolioContent.timeline;
+const TIMELINE = resumeContent.timeline;
 
 function useScrollReveal() {
   useEffect(() => {
@@ -143,7 +144,7 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
         >
           <span className="g-text text-base font-extrabold">{portfolioContent.brand.initials}</span>
           <span className={`ml-2 ${t2(light)} hidden sm:inline font-normal`}>
-            · Dayana Siles
+            · {portfolioContent.brand.name}
           </span>
         </button>
 
@@ -174,13 +175,26 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
           >
             {light ? <Moon size={16} /> : <Sun size={16} />}
           </button>
-          <button
-            className="btn btn-primary hidden sm:inline-flex"
-            style={{ padding: "8px 16px" }}
-          >
-            <Download size={14} />
-            Download CV
-          </button>
+          {personalProfile.cvUrl ? (
+            <a
+              href={personalProfile.cvUrl}
+              download
+              className="btn btn-primary hidden sm:inline-flex"
+            >
+              <Download size={14} />
+              Download CV
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              title="CV not available yet"
+              className="btn btn-primary hidden sm:inline-flex opacity-50 cursor-not-allowed"
+            >
+              <Download size={14} />
+              Download CV
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setOpen(!open)}
@@ -251,8 +265,8 @@ function Hero({ light }: { light: boolean }) {
               className="photo-frame photo-surface w-[220px] h-[270px] sm:w-[250px] sm:h-[310px] flex flex-col items-center justify-center gap-3"
             >
               <img
-                src={myPhoto}
-                alt="Dayana Siles"
+                src={personalProfile.photo}
+                alt={personalProfile.photoAlt}
                 loading="eager"
                 decoding="async"
                 className="w-full h-full object-cover object-top"
@@ -261,19 +275,22 @@ function Hero({ light }: { light: boolean }) {
 
             <div className="flex gap-2">
               {[
-                { label: "LinkedIn", Icon: FaLinkedinIn },
-                { label: "GitHub", Icon: FaGithub },
-                { label: "Figma", Icon: SiFigma },
-              ].map(({ label, Icon }) => (
-                <button
+                { ...personalProfile.links.linkedin, Icon: FaLinkedinIn },
+                { ...personalProfile.links.github, Icon: FaGithub },
+                { ...personalProfile.links.figma, Icon: SiFigma },
+              ].map(({ label, url, Icon }) => (
+                <a
                   key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
                   title={label}
                   className="btn btn-outline flex items-center gap-1.5"
                   style={{ padding: "6px 12px", fontSize: "11px" }}
                 >
                   <Icon size={13} />
                   {label}
-                </button>
+                </a>
               ))}
             </div>
           </div>
@@ -303,17 +320,9 @@ function Hero({ light }: { light: boolean }) {
             </p>
 
             <p
-              className={`max-w-[500px] mx-auto lg:mx-0 text-[15px] leading-relaxed mb-7 au-2 ${t2(light)}`}
+              className={`max-w-[650px] mx-auto lg:mx-0 text-[15px] leading-relaxed mb-7 au-2 ${t2(light)}`}
             >
-              {portfolioContent.hero.introduction}{" "}
-              <span className="text-blush font-medium">
-                {portfolioContent.hero.softwareEngineering}
-              </span>{" "}
-              {portfolioContent.hero.and}{" "}
-              <span className="text-rose font-medium">
-                {portfolioContent.hero.userExperienceDesign}
-              </span>
-              .
+              {portfolioContent.hero.summary}
             </p>
 
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-8 au-2">
@@ -404,9 +413,11 @@ function Skills({ light }: { light: boolean }) {
 }
 
 function Projects({ light }: { light: boolean }) {
-  const [filter, setFilter] = useState<Filter>("All");
+  const [filter] = useState<Filter>("All");
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const list =
     filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === filter);
+  const selectedProject = PROJECTS.find((project) => project.id === selectedProjectId);
   const divider = light
     ? "border-black/[0.06]"
     : "border-[rgba(196,118,138,0.10)]";
@@ -419,14 +430,17 @@ function Projects({ light }: { light: boolean }) {
           <H2 light={light}>{portfolioContent.sections.projects.title}</H2>
           <Sub light={light}>{portfolioContent.sections.projects.description}</Sub>
         </div>
-
+{/*}
         <div className="flex flex-wrap gap-2 mt-8" role="group" aria-label={portfolioContent.sections.projects.filterLabel}>
           {portfolioContent.sections.projects.filterOptions.map((option) => (
             <button
               key={option}
               type="button"
               aria-pressed={filter === option}
-              onClick={() => setFilter(option)}
+              onClick={() => {
+                setFilter(option);
+                setSelectedProjectId(null);
+              }}
               className={`btn ${filter === option ? "btn-primary" : "btn-outline"}`}
               style={{ padding: "6px 12px", fontSize: "11px" }}
             >
@@ -434,8 +448,9 @@ function Projects({ light }: { light: boolean }) {
             </button>
           ))}
         </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12" aria-live="polite">
+*/}
+        <div className={`mt-12 ${selectedProject ? "lg:flex lg:items-start gap-6" : ""}`}>
+          <div className={`grid sm:grid-cols-2 gap-4 ${selectedProject ? "lg:flex-1" : "lg:grid-cols-3"}`} aria-live="polite">
           {list.length === 0 ? (
             <p className={`sm:col-span-2 lg:col-span-3 ${t2(light)}`}>
               {portfolioContent.sections.projects.emptyResults}
@@ -494,25 +509,62 @@ function Projects({ light }: { light: boolean }) {
                   className={`flex items-center gap-4 pt-4 border-t ${divider}`}
                 >
                   <button
-                    className="btn btn-outline"
-                    style={{ padding: "5px 12px", fontSize: "11px" }}
+                    type="button"
+                    onClick={() => setSelectedProjectId(project.id)}
+                    aria-pressed={selectedProjectId === project.id}
+                    className="btn btn-primary"
                   >
-                    {portfolioContent.sections.projects.caseStudy}
-                  </button>
-                  <button
-                    className={`text-[11px] font-medium ${t2(light)} hover:opacity-70 transition-opacity`}
-                  >
-                    {portfolioContent.sections.projects.liveDemo}
-                  </button>
-                  <button
-                    className={`text-[11px] font-medium ${t2(light)} hover:opacity-70 transition-opacity`}
-                  >
-                    {portfolioContent.sections.projects.github}
+                    {portfolioContent.sections.projects.viewDetails}
                   </button>
                 </div>
               </div>
             </div>
             ))
+          )}
+          </div>
+
+          {selectedProject && (
+            <aside
+              className="card self-start w-fit max-w-full lg:max-w-[36%] p-6 h-fit shrink-0 border-[rgba(196,118,138,0.28)]"
+              aria-live="polite"
+            >
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <span className="section-label mb-0">
+                  {portfolioContent.sections.projects.detailsTitle}
+                </span>
+                <button
+                  type="button"
+                  className="btn btn-ghost p-2"
+                  onClick={() => setSelectedProjectId(null)}
+                  aria-label="Close project details"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+              <div>
+                  <h3 className={`font-display text-xl font-bold mb-2 ${t1(light)}`}>
+                    {selectedProject.title}
+                </h3>
+                <p className={`text-[12px] leading-relaxed mb-5 ${t2(light)}`}>
+                  {selectedProject.description}
+                </p>
+                <div className="flex flex-wrap gap-1.5 mb-5">
+                  {selectedProject.tags.map((tag) => (
+                    <span key={tag} className="tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <ul className={`space-y-3 text-[12px] leading-relaxed ${t2(light)}`}>
+                  {selectedProject.details?.map((detail) => (
+                    <li key={detail} className="flex gap-2">
+                      <span className="text-rose shrink-0">•</span>
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </aside>
           )}
         </div>
       </div>
@@ -707,7 +759,7 @@ function DesignSystem({ light }: { light: boolean }) {
           >
             <ShieldCheck size={18} className="shrink-0 mt-0.5" style={{ color: ROSE }} />
             <p className="text-[12px] leading-relaxed" style={{ color: BLUSH }}>
-              <strong>WCAG AA Compliant</strong> — All components maintain 4.5:1
+              <strong>WCAG AA Compliant</strong> - All components maintain 4.5:1
               contrast ratio for normal text. Focus states use visible ring
               indicators. Interactive elements meet 44×44px minimum touch
               targets.
@@ -738,7 +790,7 @@ function Experience({ light }: { light: boolean }) {
           />
 
           <div className="space-y-4">
-            {TIMELINE.map((item, index) => (
+            {TIMELINE.filter((item) => item.type === "work").map((item, index) => (
               <div
                 key={`${item.period}-${item.role}`}
                 className={`flex gap-6 group scroll-reveal delay-${Math.min(index + 1, 6)}`}
@@ -809,6 +861,58 @@ function Experience({ light }: { light: boolean }) {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Education({ light }: { light: boolean }) {
+  const educationItems = TIMELINE.filter((item) => item.type === "education");
+
+  return (
+    <section id="education" className="py-4 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="scroll-reveal">
+          <Label>{portfolioContent.sections.education.label}</Label>
+          <H2 light={light}>{portfolioContent.sections.education.title}</H2>
+          <Sub light={light}>{portfolioContent.sections.education.description}</Sub>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto mt-12">
+          {educationItems.map((item, index) => (
+            <article
+              key={item.id}
+              className={`card p-5 scroll-reveal delay-${Math.min(index + 1, 6)}`}
+            >
+              <div className="flex items-start gap-3">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                  style={{
+                    background: "rgba(122,61,82,0.2)",
+                    border: `1px solid ${PLUM}`,
+                    color: BLUSH,
+                  }}
+                >
+                  <GraduationCap size={14} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className={`font-bold text-[14px] ${t1(light)}`}>
+                    {item.role}
+                  </h3>
+                  <p className="text-[13px] font-semibold mt-0.5" style={{ color: BLUSH }}>
+                    {item.company}
+                  </p>
+                  <p className="text-[11px] mt-1" style={{ color: PLUM, fontFamily: "var(--font-mono)" }}>
+                    {item.period}
+                  </p>
+                  <p className={`text-[13px] leading-relaxed mt-3 ${t2(light)}`}>
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -946,7 +1050,7 @@ function Contact({ light }: { light: boolean }) {
             )}
           </div>
 
-          <div className="flex flex-col gap-4 scroll-reveal delay-2">
+          <div className="flex flex-col gap-4 lg:contents">
             <div className="card p-6">
               <span
                 className={`text-[10px] font-semibold uppercase tracking-widest block mb-5 ${t2(light)}`}
@@ -970,6 +1074,11 @@ function Contact({ light }: { light: boolean }) {
                     label: portfolioContent.contactDetails[2].label,
                     value: portfolioContent.contactDetails[2].value,
                     sub: portfolioContent.contactDetails[2].description,
+                  },
+                  {
+                    label: portfolioContent.contactDetails[3].label,
+                    value: portfolioContent.contactDetails[3].value,
+                    sub: portfolioContent.contactDetails[3].description,
                   },
                 ].map(({ label, value, sub }) => (
                   <div
@@ -1005,9 +1114,12 @@ function Contact({ light }: { light: boolean }) {
                   { ...portfolioContent.socialLinks[0], Icon: FaLinkedinIn },
                   { ...portfolioContent.socialLinks[1], Icon: FaGithub },
                   { ...portfolioContent.socialLinks[2], Icon: SiFigma },
-                ].map(({ label, handle, Icon }) => (
-                  <button
+                ].map(({ label, handle, url, Icon }) => (
+                  <a
                     key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
                     className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition-all duration-150 ${
                       light
                         ? "border-black/[0.06] hover:border-[rgba(196,118,138,0.3)]"
@@ -1033,7 +1145,7 @@ function Contact({ light }: { light: boolean }) {
                       </div>
                     </div>
                     <ExternalLink size={13} style={{ color: ROSE }} />
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
@@ -1043,6 +1155,7 @@ function Contact({ light }: { light: boolean }) {
               style={{
                 background: "rgba(196,118,138,0.05)",
                 border: "1px solid rgba(196,118,138,0.15)",
+                height: "fit-content",
               }}
             >
               <div className="flex items-center gap-2 mb-1.5">
@@ -1077,10 +1190,7 @@ function Footer({ light }: { light: boolean }) {
       <div
         className={`max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] ${t2(light)}`}
       >
-        <p>
-          © 2026 Dayana Siles · Senior Frontend & UI Engineer · Cochabamba,
-          Bolivia
-        </p>
+        <p>{portfolioContent.footer.copyright}</p>
         <p style={{ fontFamily: "var(--font-mono)" }}>
           <span style={{ color: ROSE }}>{portfolioContent.footer.technologies[0]}</span>
           {" · "}
@@ -1128,9 +1238,10 @@ export default function App() {
       <Navbar light={light} onToggle={() => setLight((prev) => !prev)} />
       <Hero light={light} />
       <Projects light={light} />
-      <Experience light={light} />
+      {!DISABLED_SECTIONS.has("experience") && <Experience light={light} />}
+      <Education light={light} />
       <Skills light={light} />
-      <DesignSystem light={light} />
+      {!DISABLED_SECTIONS.has("design-system") && <DesignSystem light={light} />}
       <Contact light={light} />
       <Footer light={light} />
     </div>
