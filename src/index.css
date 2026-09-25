@@ -337,3 +337,88 @@ body:not(.light) {
   background: #FBF6F8;
   color: #1A0F14;
 }
+
+/* Shared component styles used by the React markup. */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-rose {
+  color: #C4768A;
+}
+
+.text-blush {
+  color: #E0A0B2;
+}
+
+.text-plum {
+  color: #7A3D52;
+}
+
+.hero-status {
+  border-color: rgba(196, 118, 138, 0.25);
+  background: rgba(196, 118, 138, 0.06);
+  color: #E0A0B2;
+  font-family: var(--font-mono);
+}
+
+.hero-status-dot {
+  background: #C4768A;
+}
+
+.hero-orb-primary {
+  background: radial-gradient(circle, #C4768A, transparent 65%);
+}
+
+.hero-orb-secondary {
+  background: radial-gradient(circle, #7A3D52, transparent 65%);
+}
+
+.hero-grid-dark {
+  background-image: radial-gradient(circle, #F2EBED 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+.hero-grid-light {
+  background-image: radial-gradient(circle, #1A0F14 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+.photo-surface {
+  background: #150E11;
+}
+
+.light .photo-surface {
+  background: #F0E8EC;
+}
+
+.gradient-rule {
+  background: linear-gradient(90deg, #C4768A, transparent);
+}
+
+.token-success {
+  background: rgba(196, 118, 138, 0.08);
+  border: 1px solid rgba(196, 118, 138, 0.18);
+  color: #E0A0B2;
+}
+
+.token-warning {
+  background: rgba(245, 208, 218, 0.08);
+  border: 1px solid rgba(245, 208, 218, 0.18);
+  color: #be6f84;
+}
+
+.accessibility-notice {
+  background: rgba(196, 118, 138, 0.05);
+  border: 1px solid rgba(196, 118, 138, 0.14);
+  color: #E0A0B2;
+}
+
+.availability-notice {
+  background: rgba(196, 118, 138, 0.05);
+  border: 1px solid rgba(196, 118, 138, 0.15);
+}

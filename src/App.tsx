@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Sun,
   Moon,
@@ -15,175 +15,39 @@ import {
 import { FaLinkedinIn, FaGithub } from "react-icons/fa";
 import { SiFigma } from "react-icons/si";
 import myPhoto from "./assets/images/my-photo.jpg";
+import { portfolioContent, type ProjectCategory } from "./data/content";
 
 const ROSE = "#C4768A";
 const BLUSH = "#E0A0B2";
 const CREAM = "#be6f84ff";
 const PLUM = "#7A3D52";
 
-type Filter = "All" | "Angular" | "React" | "UI/UX Design";
+type Filter = "All" | ProjectCategory;
 
-interface SkillCategory {
-  n: string;
-  title: string;
-  items: string[];
-}
+const NAV = [
+  { label: portfolioContent.navigation.projects, id: "projects" },
+  { label: portfolioContent.navigation.experience, id: "experience" },
+  { label: portfolioContent.navigation.skills, id: "skills" },
+  { label: portfolioContent.navigation.designSystem, id: "design-system" },
+  { label: portfolioContent.navigation.contact, id: "contact" },
+] as const;
 
-interface ProjectItem {
-  id: number;
-  cat: string;
-  year: string;
-  metric: string;
-  title: string;
-  desc: string;
-  tags: string[];
-}
+const SKILLS = portfolioContent.skills;
 
-interface TimelineItem {
-  period: string;
-  type: "work" | "edu";
-  current: boolean;
-  role: string;
-  company: string;
-  desc: string;
-}
+const PROJECTS = portfolioContent.projects;
 
-const NAV = ["Projects", "Experience", "Skills", "Design System", "Contact"];
-
-const SKILLS: SkillCategory[] = [
-  {
-    n: "01",
-    title: "Frontend Architecture",
-    items: [
-      "Angular v20",
-      "React 19",
-      "TypeScript",
-      "RxJS",
-      "NgRx",
-      "Signals API",
-      "Micro-frontends",
-    ],
-  },
-  {
-    n: "02",
-    title: "UI/UX & Design Systems",
-    items: [
-      "Figma",
-      "High-Fidelity Proto",
-      "Tailwind CSS",
-      "SCSS / BEM",
-      "WCAG Accessibility",
-      "Design Tokens",
-    ],
-  },
-  {
-    n: "03",
-    title: "Testing & CI/CD",
-    items: [
-      "Jest",
-      "Testing Library",
-      "Docker",
-      "Jenkins",
-      "GitHub Actions",
-      "E2E Testing",
-    ],
-  },
-  {
-    n: "04",
-    title: "AI Tools & Engineering",
-    items: [
-      "Claude Code",
-      "AI-Driven Workflows",
-      "Prompt Engineering",
-      "LLM Integration",
-    ],
-  },
-];
-
-const PROJECTS: ProjectItem[] = [
-  {
-    id: 1,
-    cat: "Angular",
-    year: "2024",
-    metric: "+20% Perf",
-    title: "Zack Report Generator",
-    desc: "Enterprise report platform integrated with Microsoft Teams. Rebuilt with Angular v20 Standalone, Signals, and deferred loading — delivering a 20% performance boost.",
-    tags: ["Angular v20", "Signals", "Standalone", "MS Teams", "TypeScript"],
-  },
-  {
-    id: 2,
-    cat: "Angular",
-    year: "2023",
-    metric: "5 Teams",
-    title: "Vipre Antivirus & Design System",
-    desc: "Architected a micro-frontend ecosystem for Vipre. Built a full UI component library with KQL parser, NgRx, and SCSS BEM architecture shared across 5 product teams.",
-    tags: [
-      "Micro-frontends",
-      "NgRx",
-      "SCSS BEM",
-      "KQL Parser",
-      "Component Lib",
-    ],
-  },
-  {
-    id: 3,
-    cat: "Angular",
-    year: "2022",
-    metric: "Offline-first",
-    title: "Traveler PWA",
-    desc: "Offline-first progressive web app for travel planning with Leaflet.js maps, IndexedDB caching, and service workers. Works in low-connectivity environments.",
-    tags: ["Angular", "PWA", "Leaflet.js", "IndexedDB", "Service Workers"],
-  },
-];
-
-const TIMELINE: TimelineItem[] = [
-  {
-    period: "2023 — Present",
-    type: "work",
-    current: true,
-    role: "Technical Lead & Frontend Engineer",
-    company: "Jalasoft",
-    desc: "Leading a team of 6 engineers, architecting Angular v20 micro-frontend solutions, establishing code standards, and driving adoption of Signals across the org.",
-  },
-  {
-    period: "2024 — 2025",
-    type: "edu",
-    current: false,
-    role: "M.Sc. in AI Software Product Development",
-    company: "University of the West of England",
-    desc: "Masters degree focused on AI-driven product development, ML integration in web applications, and modern software engineering practices.",
-  },
-  {
-    period: "2021 — 2023",
-    type: "work",
-    current: false,
-    role: "Senior Frontend Developer",
-    company: "Jalasoft",
-    desc: "Developed enterprise Angular apps for international clients, built the Vipre Design System, introduced NgRx for scalable state management.",
-  },
-  {
-    period: "2022",
-    type: "edu",
-    current: false,
-    role: "Google UX Design Certificate",
-    company: "Google / Coursera",
-    desc: "Professional UX certification covering user research, wireframing, prototyping, and usability testing.",
-  },
-  {
-    period: "2019 — 2021",
-    type: "work",
-    current: false,
-    role: "Frontend Developer",
-    company: "Jalasoft",
-    desc: "Built responsive Angular apps and contributed to the migration from AngularJS to modern Angular.",
-  },
-];
+const TIMELINE = portfolioContent.timeline;
 
 function useScrollReveal() {
   useEffect(() => {
     const targets = document.querySelectorAll(
       ".scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale"
     );
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      targets.forEach((target) => target.classList.add("is-visible"));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -197,17 +61,17 @@ function useScrollReveal() {
     );
     targets.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  });
+  }, []);
 }
 
-function goto(id: string) {
-  const el = document.getElementById(id.toLowerCase().replace(/ /g, "-"));
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
   if (!el) return;
   const top = el.getBoundingClientRect().top + window.scrollY - 58;
   window.scrollTo({ top, behavior: "smooth" });
 }
 
-function Label({ children }: { children: React.ReactNode }) {
+function Label({ children }: { children: ReactNode }) {
   return <span className="section-label">{children}</span>;
 }
 
@@ -215,13 +79,12 @@ function H2({
   children,
   light,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   light: boolean;
 }) {
   return (
     <h2
-      className={`text-4xl sm:text-5xl font-extrabold tracking-tight mb-3 ${light ? "text-[#1A0F14]" : "text-[#F2EBED]"}`}
-      style={{ fontFamily: "var(--font-display)" }}
+      className={`font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-3 ${light ? "text-[#1A0F14]" : "text-[#F2EBED]"}`}
     >
       {children}
     </h2>
@@ -232,7 +95,7 @@ function Sub({
   children,
   light,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   light: boolean;
 }) {
   return (
@@ -258,6 +121,7 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -275,10 +139,9 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
       <div className="max-w-6xl mx-auto px-6 h-[58px] flex items-center justify-between">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className={`font-bold text-sm tracking-tight hover:opacity-70 transition-opacity ${t1(light)}`}
-          style={{ fontFamily: "var(--font-display)" }}
+          className={`font-display font-bold text-sm tracking-tight hover:opacity-70 transition-opacity ${t1(light)}`}
         >
-          <span className="g-text text-base font-extrabold">DS</span>
+          <span className="g-text text-base font-extrabold">{portfolioContent.brand.initials}</span>
           <span className={`ml-2 ${t2(light)} hidden sm:inline font-normal`}>
             · Dayana Siles
           </span>
@@ -287,20 +150,22 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
         <div className="hidden md:flex items-center gap-0.5">
           {NAV.map((item) => (
             <button
-              key={item}
-              onClick={() => goto(item)}
-              className={`px-4 py-2 rounded-md text-[13px] font-medium transition-colors duration-150 ${t2(light)} hover:${t1(light)}`}
-              style={{ fontFamily: "var(--font-display)" }}
+              key={item.id}
+              type="button"
+              onClick={() => scrollToSection(item.id)}
+              className={`font-display px-4 py-2 rounded-md text-[13px] font-medium transition-colors duration-150 ${t2(light)} hover:opacity-70`}
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </div>
 
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={onToggle}
             aria-label="Toggle theme"
+            aria-pressed={light}
             className={`w-8 h-8 rounded-md flex items-center justify-center transition-all ${
               light
                 ? "bg-black/[0.05] hover:bg-black/[0.09] text-[#6B505A]"
@@ -317,8 +182,11 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
             Download CV
           </button>
           <button
+            type="button"
             onClick={() => setOpen(!open)}
             aria-label="Toggle navigation menu"
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
             className={`md:hidden w-8 h-8 rounded-md flex items-center justify-center ${t2(light)} ${
               light ? "bg-black/[0.05]" : "bg-white/[0.05]"
             }`}
@@ -330,6 +198,7 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
 
       {open && (
         <div
+          id="mobile-navigation"
           className={`md:hidden border-t px-6 py-4 flex flex-col gap-1 ${
             light
               ? "bg-[#FBF6F8] border-black/[0.06]"
@@ -338,15 +207,15 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
         >
           {NAV.map((item) => (
             <button
-              key={item}
+              key={item.id}
+              type="button"
               onClick={() => {
-                goto(item);
+                scrollToSection(item.id);
                 setOpen(false);
               }}
-              className={`text-left px-3 py-2.5 rounded-md text-[13px] font-medium ${t2(light)}`}
-              style={{ fontFamily: "var(--font-display)" }}
+              className={`font-display text-left px-3 py-2.5 rounded-md text-[13px] font-medium ${t2(light)}`}
             >
-              {item}
+                {item.label}
             </button>
           ))}
         </div>
@@ -356,12 +225,7 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
 }
 
 function Hero({ light }: { light: boolean }) {
-  const pills = [
-    "+6 Yrs Exp",
-    "Angular v20 & React",
-    "Design Systems",
-    "M.Sc. AI Product Dev",
-  ];
+  const { pills } = portfolioContent.hero;
   const pillCls = light
     ? "bg-black/[0.04] border border-black/[0.08] text-[#4A3040]"
     : "bg-[rgba(196,118,138,0.06)] border border-[rgba(196,118,138,0.16)] text-[#9A8088]";
@@ -370,23 +234,13 @@ function Hero({ light }: { light: boolean }) {
     <section className="relative min-h-screen flex items-center pt-16 px-6 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
-          className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.05] blur-[110px]"
-          style={{
-            background: "radial-gradient(circle, #C4768A, transparent 65%)",
-          }}
+          className="hero-orb-primary absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.05] blur-[110px]"
         />
         <div
-          className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-[0.03] blur-[90px]"
-          style={{
-            background: "radial-gradient(circle, #7A3D52, transparent 65%)",
-          }}
+          className="hero-orb-secondary absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-[0.03] blur-[90px]"
         />
         <div
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: `radial-gradient(circle, ${light ? "#1A0F14" : "#F2EBED"} 1px, transparent 1px)`,
-            backgroundSize: "34px 34px",
-          }}
+          className={`absolute inset-0 opacity-[0.015] ${light ? "hero-grid-light" : "hero-grid-dark"}`}
         />
       </div>
 
@@ -394,12 +248,13 @@ function Hero({ light }: { light: boolean }) {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           <div className="flex flex-col items-center gap-4 au shrink-0">
             <div
-              className="photo-frame w-[220px] h-[270px] sm:w-[250px] sm:h-[310px] flex flex-col items-center justify-center gap-3"
-              style={{ background: light ? "#F0E8EC" : "#150E11" }}
+              className="photo-frame photo-surface w-[220px] h-[270px] sm:w-[250px] sm:h-[310px] flex flex-col items-center justify-center gap-3"
             >
               <img
                 src={myPhoto}
                 alt="Dayana Siles"
+                loading="eager"
+                decoding="async"
                 className="w-full h-full object-cover object-top"
               />
             </div>
@@ -425,48 +280,38 @@ function Hero({ light }: { light: boolean }) {
 
           <div className="flex-1 text-center lg:text-left">
             <div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border text-[11px] font-medium mb-7 au"
-              style={{
-                borderColor: "rgba(196,118,138,0.25)",
-                background: "rgba(196,118,138,0.06)",
-                color: BLUSH,
-                fontFamily: "var(--font-mono)",
-              }}
+              className="hero-status inline-flex items-center gap-2 px-3 py-1.5 rounded-md border text-[11px] font-medium mb-7 au font-mono"
             >
               <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse"
-                style={{ background: ROSE }}
+                className="hero-status-dot w-1.5 h-1.5 rounded-full animate-pulse"
               />
-              Available · Remote / Full-time
+              {portfolioContent.hero.availability}
             </div>
 
             <h1
-              className={`text-[clamp(3rem,8vw,5.5rem)] font-extrabold tracking-tight leading-[1.03] mb-4 au-1 ${t1(light)}`}
-              style={{ fontFamily: "var(--font-display)" }}
+              className={`font-display text-[clamp(3rem,8vw,5.5rem)] font-extrabold tracking-tight leading-[1.03] mb-4 au-1 ${t1(light)}`}
             >
-              Dayana
+              {portfolioContent.hero.firstName}
               <br />
-              <span className="g-text">Siles</span>
+              <span className="g-text">{portfolioContent.hero.lastName}</span>
             </h1>
 
             <p
-              className={`text-[17px] font-semibold mb-4 au-1 ${t2(light)}`}
-              style={{ fontFamily: "var(--font-display)" }}
+              className={`font-display text-[17px] font-semibold mb-4 au-1 ${t2(light)}`}
             >
-              Senior Frontend & UI Engineer · Angular & React Specialist
+              {portfolioContent.hero.role}
             </p>
 
             <p
               className={`max-w-[500px] mx-auto lg:mx-0 text-[15px] leading-relaxed mb-7 au-2 ${t2(light)}`}
             >
-              6+ years building enterprise web applications, architecting design
-              systems, and bridging the gap between{" "}
-              <span style={{ color: BLUSH }} className="font-medium">
-                Software Engineering
+              {portfolioContent.hero.introduction}{" "}
+              <span className="text-blush font-medium">
+                {portfolioContent.hero.softwareEngineering}
               </span>{" "}
-              and{" "}
-              <span style={{ color: CREAM }} className="font-medium">
-                UI/UX Design
+              {portfolioContent.hero.and}{" "}
+              <span className="text-rose font-medium">
+                {portfolioContent.hero.userExperienceDesign}
               </span>
               .
             </p>
@@ -486,33 +331,18 @@ function Hero({ light }: { light: boolean }) {
             <div className="flex flex-wrap justify-center lg:justify-start gap-3 au-3">
               <button
                 className="btn btn-primary"
-                onClick={() => goto("Projects")}
+                onClick={() => scrollToSection("projects")}
               >
-                View Projects
+                {portfolioContent.hero.viewProjects}
                 <ArrowRight size={14} />
               </button>
-              <button className="btn btn-ghost" onClick={() => goto("Contact")}>
+              <button className="btn btn-ghost" onClick={() => scrollToSection("contact")}>
                 <Mail size={14} />
-                Contact Me
+                {portfolioContent.hero.contactMe}
               </button>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-20">
-        <span
-          className="text-[9px] tracking-[0.22em] uppercase"
-          style={{ color: ROSE, fontFamily: "var(--font-mono)" }}
-        >
-          scroll
-        </span>
-        <div
-          className="w-px h-6"
-          style={{
-            background: `linear-gradient(to bottom, ${ROSE}, transparent)`,
-          }}
-        />
       </div>
     </section>
   );
@@ -523,18 +353,15 @@ function Skills({ light }: { light: boolean }) {
     <section id="skills" className="py-4 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="scroll-reveal">
-          <Label>Technical Skills</Label>
-          <H2 light={light}>What I Build With</H2>
-          <Sub light={light}>
-            A decade of frontend craft distilled into the tools and practices
-            that shape my work.
-          </Sub>
+          <Label>{portfolioContent.sections.skills.label}</Label>
+          <H2 light={light}>{portfolioContent.sections.skills.title}</H2>
+          <Sub light={light}>{portfolioContent.sections.skills.description}</Sub>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
           {SKILLS.map((skill, index) => (
             <div
-              key={skill.n}
+              key={skill.id}
               className={`card p-6 cursor-default scroll-reveal-scale delay-${index + 1}`}
             >
               <div className="flex items-center justify-between mb-5">
@@ -546,7 +373,7 @@ function Skills({ light }: { light: boolean }) {
                     fontWeight: 700,
                   }}
                 >
-                  {skill.n}
+                  {skill.displayNumber}
                 </span>
                 <div
                   className="w-6 h-px"
@@ -577,9 +404,9 @@ function Skills({ light }: { light: boolean }) {
 }
 
 function Projects({ light }: { light: boolean }) {
-  const [filter] = useState<Filter>("All");
+  const [filter, setFilter] = useState<Filter>("All");
   const list =
-    filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.cat === filter);
+    filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === filter);
   const divider = light
     ? "border-black/[0.06]"
     : "border-[rgba(196,118,138,0.10)]";
@@ -588,16 +415,33 @@ function Projects({ light }: { light: boolean }) {
     <section id="projects" className="py-4 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="scroll-reveal">
-          <Label>Featured Projects</Label>
-          <H2 light={light}>Case Studies</H2>
-          <Sub light={light}>
-            Enterprise applications, design systems, and user-centric
-            experiences built at scale.
-          </Sub>
+          <Label>{portfolioContent.sections.projects.label}</Label>
+          <H2 light={light}>{portfolioContent.sections.projects.title}</H2>
+          <Sub light={light}>{portfolioContent.sections.projects.description}</Sub>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
-          {list.map((project, index) => (
+        <div className="flex flex-wrap gap-2 mt-8" role="group" aria-label={portfolioContent.sections.projects.filterLabel}>
+          {portfolioContent.sections.projects.filterOptions.map((option) => (
+            <button
+              key={option}
+              type="button"
+              aria-pressed={filter === option}
+              onClick={() => setFilter(option)}
+              className={`btn ${filter === option ? "btn-primary" : "btn-outline"}`}
+              style={{ padding: "6px 12px", fontSize: "11px" }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12" aria-live="polite">
+          {list.length === 0 ? (
+            <p className={`sm:col-span-2 lg:col-span-3 ${t2(light)}`}>
+              {portfolioContent.sections.projects.emptyResults}
+            </p>
+          ) : (
+            list.map((project, index) => (
             <div
               key={project.id}
               className={`card flex flex-col overflow-hidden scroll-reveal delay-${index + 1}`}
@@ -637,7 +481,7 @@ function Projects({ light }: { light: boolean }) {
                 <p
                   className={`text-[13px] leading-relaxed flex-1 mb-5 ${t2(light)}`}
                 >
-                  {project.desc}
+                  {project.description}
                 </p>
                 <div className="flex flex-wrap gap-1.5 mb-5">
                   {project.tags.map((tag) => (
@@ -653,22 +497,23 @@ function Projects({ light }: { light: boolean }) {
                     className="btn btn-outline"
                     style={{ padding: "5px 12px", fontSize: "11px" }}
                   >
-                    Case Study
+                    {portfolioContent.sections.projects.caseStudy}
                   </button>
                   <button
-                    className={`text-[11px] font-medium ${t2(light)} hover:text-[${BLUSH}] transition-colors`}
+                    className={`text-[11px] font-medium ${t2(light)} hover:opacity-70 transition-opacity`}
                   >
-                    Live Demo ↗
+                    {portfolioContent.sections.projects.liveDemo}
                   </button>
                   <button
-                    className={`text-[11px] font-medium ${t2(light)} hover:text-[${BLUSH}] transition-colors`}
+                    className={`text-[11px] font-medium ${t2(light)} hover:opacity-70 transition-opacity`}
                   >
-                    GitHub ↗
+                    {portfolioContent.sections.projects.github}
                   </button>
                 </div>
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </section>
@@ -676,47 +521,7 @@ function Projects({ light }: { light: boolean }) {
 }
 
 function DesignSystem({ light }: { light: boolean }) {
-  const steps = [
-    {
-      n: "01",
-      label: "Discovery & Research",
-      sub: "User interviews, competitive analysis, heuristic evaluation",
-    },
-    {
-      n: "02",
-      label: "Information Architecture",
-      sub: "User flows, sitemaps, card sorting sessions",
-    },
-    {
-      n: "03",
-      label: "Lo-Fi Wireframing",
-      sub: "Rapid sketches, low-fidelity Figma wireframes",
-    },
-    {
-      n: "04",
-      label: "High-Fidelity Prototype",
-      sub: "Pixel-perfect Figma prototypes with component library",
-    },
-    {
-      n: "05",
-      label: "Accessibility Audit",
-      sub: "WCAG AA compliance, contrast ratios, screen readers",
-    },
-    {
-      n: "06",
-      label: "Dev Handoff",
-      sub: "Design tokens, Storybook docs, engineering collaboration",
-    },
-  ];
-
-  const tokens = [
-    { label: "Dusty Rose", hex: "#C4768A", token: "--rose" },
-    { label: "Blush", hex: "#E0A0B2", token: "--blush" },
-    { label: "Cream", hex: "#be6f84ff", token: "--cream" },
-    { label: "Plum", hex: "#7A3D52", token: "--plum" },
-    { label: "Surface", hex: "#1A1117", token: "--card" },
-    { label: "Border", hex: "#2A1820", token: "--border" },
-  ];
+  const { processSteps: steps, tokens, capabilityCards } = portfolioContent.designSystem;
 
   const monoLbl = `text-[10px] font-semibold uppercase tracking-widest ${t2(light)} mb-5 block`;
 
@@ -724,12 +529,9 @@ function DesignSystem({ light }: { light: boolean }) {
     <section id="design-system" className="py-4 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="scroll-reveal">
-          <Label>UI/UX Process & Design System</Label>
-          <H2 light={light}>From Figma to Production</H2>
-          <Sub light={light}>
-            Systematic component architecture and rigorous accessibility
-            standards bridging design and engineering.
-          </Sub>
+          <Label>{portfolioContent.sections.designSystem.label}</Label>
+          <H2 light={light}>{portfolioContent.sections.designSystem.title}</H2>
+          <Sub light={light}>{portfolioContent.sections.designSystem.description}</Sub>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 mt-12 mb-6">
@@ -738,25 +540,25 @@ function DesignSystem({ light }: { light: boolean }) {
               className={monoLbl}
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              UX Process
+              {portfolioContent.sections.designSystem.uxProcess}
             </span>
             <div className="space-y-5">
-              {steps.map(({ n, label, sub }) => (
-                <div key={n} className="flex gap-4">
+              {steps.map(({ number, title, description }) => (
+                <div key={number} className="flex gap-4">
                   <span
                     className="text-[11px] font-bold w-6 shrink-0 mt-0.5"
                     style={{ color: ROSE, fontFamily: "var(--font-mono)" }}
                   >
-                    {n}
+                    {number}
                   </span>
                   <div>
                     <p className={`text-[13px] font-semibold ${t1(light)}`}>
-                      {label}
+                      {title}
                     </p>
                     <p
                       className={`text-[12px] leading-relaxed mt-0.5 ${t2(light)}`}
                     >
-                      {sub}
+                      {description}
                     </p>
                   </div>
                 </div>
@@ -770,7 +572,7 @@ function DesignSystem({ light }: { light: boolean }) {
                 className={monoLbl}
                 style={{ fontFamily: "var(--font-mono)" }}
               >
-                Design Tokens
+                {portfolioContent.sections.designSystem.designTokens}
               </span>
               <div className="space-y-2.5">
                 {tokens.map((tk) => (
@@ -805,21 +607,16 @@ function DesignSystem({ light }: { light: boolean }) {
             </div>
 
             <div className="grid grid-cols-2 gap-3 flex-1">
-              {[
-                { label: "Accessibility", sub: "WCAG AA/AAA" },
-                { label: "Design Tokens", sub: "Figma Variables" },
-                { label: "Prototyping", sub: "Hi-Fi in Figma" },
-                { label: "System Thinking", sub: "Component APIs" },
-              ].map(({ label, sub }) => (
-                <div key={label} className="card p-4">
+              {capabilityCards.map(({ title, description }) => (
+                <div key={title} className="card p-4">
                   <div className="w-4 h-px mb-3" style={{ background: ROSE }} />
                   <p
                     className={`text-[13px] font-semibold ${t1(light)}`}
                     style={{ fontFamily: "var(--font-display)" }}
                   >
-                    {label}
+                    {title}
                   </p>
-                  <p className={`text-[11px] mt-0.5 ${t2(light)}`}>{sub}</p>
+                  <p className={`text-[11px] mt-0.5 ${t2(light)}`}>{description}</p>
                 </div>
               ))}
             </div>
@@ -832,7 +629,7 @@ function DesignSystem({ light }: { light: boolean }) {
               className={monoLbl}
               style={{ fontFamily: "var(--font-mono)", marginBottom: 0 }}
             >
-              Component Library
+              {portfolioContent.sections.designSystem.componentLibrary}
             </span>
             <span
               className="text-[11px] px-3 py-1 rounded-md"
@@ -843,19 +640,19 @@ function DesignSystem({ light }: { light: boolean }) {
                 fontFamily: "var(--font-mono)",
               }}
             >
-              Angular · React · Storybook
+              {portfolioContent.sections.designSystem.componentLibraryStack}
             </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mb-6">
             <button className="btn btn-primary" style={{ padding: "9px 18px" }}>
-              Primary
+              {portfolioContent.sections.designSystem.sampleButtons[0]}
             </button>
             <button className="btn btn-outline" style={{ padding: "9px 18px" }}>
-              Outline
+              {portfolioContent.sections.designSystem.sampleButtons[1]}
             </button>
             <button className="btn btn-ghost" style={{ padding: "9px 18px" }}>
-              Ghost
+              {portfolioContent.sections.designSystem.sampleButtons[2]}
             </button>
             <span
               className="text-[11px] font-semibold px-2.5 py-1.5 rounded-sm"
@@ -866,7 +663,7 @@ function DesignSystem({ light }: { light: boolean }) {
                 fontFamily: "var(--font-mono)",
               }}
             >
-              Success
+              {portfolioContent.sections.designSystem.sampleStatuses[0]}
             </span>
             <span
               className="text-[11px] font-semibold px-2.5 py-1.5 rounded-sm"
@@ -877,11 +674,11 @@ function DesignSystem({ light }: { light: boolean }) {
                 fontFamily: "var(--font-mono)",
               }}
             >
-              Warning
+              {portfolioContent.sections.designSystem.sampleStatuses[1]}
             </span>
             <input
               type="text"
-              placeholder="Search…"
+              placeholder={portfolioContent.sections.designSystem.searchPlaceholder}
               className={`px-4 py-2 rounded-md text-[13px] border outline-none transition-all ${
                 light
                   ? "bg-black/[0.03] border-black/[0.1] text-[#1A0F14] placeholder-[#9A8088]"
@@ -897,7 +694,7 @@ function DesignSystem({ light }: { light: boolean }) {
               >
                 <div className="w-[18px] h-[18px] rounded-sm bg-white ml-auto shadow-sm" />
               </div>
-              <span className={`text-[12px] ${t2(light)}`}>Active</span>
+              <span className={`text-[12px] ${t2(light)}`}>{portfolioContent.sections.designSystem.activeStatus}</span>
             </div>
           </div>
 
@@ -927,12 +724,9 @@ function Experience({ light }: { light: boolean }) {
     <section id="experience" className="py-4 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="scroll-reveal">
-          <Label>Experience & Education</Label>
-          <H2 light={light}>The Journey</H2>
-          <Sub light={light}>
-            From junior engineer to technical lead — a career defined by
-            continuous learning.
-          </Sub>
+          <Label>{portfolioContent.sections.experience.label}</Label>
+          <H2 light={light}>{portfolioContent.sections.experience.title}</H2>
+          <Sub light={light}>{portfolioContent.sections.experience.description}</Sub>
         </div>
 
         <div className="relative max-w-3xl mx-auto mt-12">
@@ -946,7 +740,7 @@ function Experience({ light }: { light: boolean }) {
           <div className="space-y-4">
             {TIMELINE.map((item, index) => (
               <div
-                key={index}
+                key={`${item.period}-${item.role}`}
                 className={`flex gap-6 group scroll-reveal delay-${Math.min(index + 1, 6)}`}
               >
                 <div className="shrink-0 flex flex-col items-center pt-[14px]">
@@ -997,7 +791,7 @@ function Experience({ light }: { light: boolean }) {
                             fontFamily: "var(--font-mono)",
                           }}
                         >
-                          Now
+                          {portfolioContent.sections.experience.currentLabel}
                         </span>
                       )}
                       <span
@@ -1009,7 +803,7 @@ function Experience({ light }: { light: boolean }) {
                     </div>
                   </div>
                   <p className={`text-[13px] leading-relaxed ${t2(light)}`}>
-                    {item.desc}
+                    {item.description}
                   </p>
                 </div>
               </div>
@@ -1038,18 +832,19 @@ function Contact({ light }: { light: boolean }) {
     <section id="contact" className="py-4 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="scroll-reveal">
-          <Label>Get In Touch</Label>
-          <H2 light={light}>Let's Build Something</H2>
-          <Sub light={light}>
-            Open to senior frontend roles, design system projects, and
-            consulting. Based in Cochabamba, Bolivia — remote or full-time.
-          </Sub>
+          <Label>{portfolioContent.sections.contact.label}</Label>
+          <H2 light={light}>{portfolioContent.sections.contact.title}</H2>
+          <Sub light={light}>{portfolioContent.sections.contact.description}</Sub>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 max-w-4xl mx-auto mt-12">
           <div className="card p-7 scroll-reveal delay-1">
             {sent ? (
-              <div className="flex flex-col items-center justify-center py-14 gap-4 text-center">
+              <div
+                className="flex flex-col items-center justify-center py-14 gap-4 text-center"
+                role="status"
+                aria-live="polite"
+              >
                 <div
                   className="w-12 h-12 rounded-md flex items-center justify-center text-lg font-bold"
                   style={{
@@ -1064,17 +859,17 @@ function Contact({ light }: { light: boolean }) {
                   className={`text-xl font-bold ${t1(light)}`}
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  Message sent!
+                  {portfolioContent.sections.contact.messageSent}
                 </h3>
                 <p className={`text-[13px] ${t2(light)}`}>
-                  I'll get back to you within 24 hours.
+                  {portfolioContent.sections.contact.responsePromise}
                 </p>
                 <button
                   className="btn btn-ghost"
                   onClick={() => setSent(false)}
                   style={{ padding: "6px 14px", fontSize: "12px" }}
                 >
-                  Send another
+                  {portfolioContent.sections.contact.sendAnother}
                 </button>
               </div>
             ) : (
@@ -1083,36 +878,40 @@ function Contact({ light }: { light: boolean }) {
                   e.preventDefault();
                   setSent(true);
                 }}
+                aria-label={portfolioContent.sections.contact.formLabel}
                 className="space-y-4"
               >
                 {[
                   {
-                    label: "Name",
+                    label: portfolioContent.sections.contact.nameLabel,
                     type: "text",
                     val: name,
                     set: setName,
-                    ph: "Your full name",
+                    ph: portfolioContent.sections.contact.namePlaceholder,
                   },
                   {
-                    label: "Email",
+                    label: portfolioContent.sections.contact.emailLabel,
                     type: "email",
                     val: email,
                     set: setEmail,
-                    ph: "you@company.com",
+                    ph: portfolioContent.sections.contact.emailPlaceholder,
                   },
                 ].map(({ label, type, val, set, ph }) => (
                   <div key={label}>
                     <label
+                      htmlFor={label.toLowerCase()}
                       className={`block text-[10px] font-semibold mb-1.5 uppercase tracking-widest ${t2(light)}`}
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
                       {label}
                     </label>
                     <input
+                      id={label.toLowerCase()}
                       value={val}
                       onChange={(e) => set(e.target.value)}
                       required
                       type={type}
+                      autoComplete={type === "email" ? "email" : "name"}
                       placeholder={ph}
                       className={inputCls}
                     />
@@ -1120,17 +919,19 @@ function Contact({ light }: { light: boolean }) {
                 ))}
                 <div>
                   <label
+                    htmlFor="message"
                     className={`block text-[10px] font-semibold mb-1.5 uppercase tracking-widest ${t2(light)}`}
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
-                    Message
+                    {portfolioContent.sections.contact.messageLabel}
                   </label>
                   <textarea
+                    id="message"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     required
                     rows={5}
-                    placeholder="Tell me about your project or opportunity…"
+                    placeholder={portfolioContent.sections.contact.messagePlaceholder}
                     className={`${inputCls} resize-none`}
                   />
                 </div>
@@ -1139,7 +940,7 @@ function Contact({ light }: { light: boolean }) {
                   className="btn btn-primary w-full"
                   style={{ padding: "11px 22px" }}
                 >
-                  Send Message
+                  {portfolioContent.sections.contact.sendMessage}
                 </button>
               </form>
             )}
@@ -1151,24 +952,24 @@ function Contact({ light }: { light: boolean }) {
                 className={`text-[10px] font-semibold uppercase tracking-widest block mb-5 ${t2(light)}`}
                 style={{ fontFamily: "var(--font-mono)" }}
               >
-                Direct Contact
+                {portfolioContent.sections.contact.directContact}
               </span>
               <div className="space-y-4">
                 {[
                   {
-                    label: "Email",
-                    value: "dayana.siles@email.com",
-                    sub: "Preferred method",
+                    label: portfolioContent.contactDetails[0].label,
+                    value: portfolioContent.contactDetails[0].value,
+                    sub: portfolioContent.contactDetails[0].description,
                   },
                   {
-                    label: "Location",
-                    value: "Cochabamba, Bolivia",
-                    sub: "Remote / Full-time available",
+                    label: portfolioContent.contactDetails[1].label,
+                    value: portfolioContent.contactDetails[1].value,
+                    sub: portfolioContent.contactDetails[1].description,
                   },
                   {
-                    label: "Response time",
-                    value: "< 24 hours",
-                    sub: "Typical reply time",
+                    label: portfolioContent.contactDetails[2].label,
+                    value: portfolioContent.contactDetails[2].value,
+                    sub: portfolioContent.contactDetails[2].description,
                   },
                 ].map(({ label, value, sub }) => (
                   <div
@@ -1197,13 +998,13 @@ function Contact({ light }: { light: boolean }) {
                 className={`text-[10px] font-semibold uppercase tracking-widest block mb-4 ${t2(light)}`}
                 style={{ fontFamily: "var(--font-mono)" }}
               >
-                Online
+                {portfolioContent.sections.contact.online}
               </span>
               <div className="space-y-2">
                 {[
-                  { label: "LinkedIn", handle: "/in/dayana-siles", Icon: FaLinkedinIn },
-                  { label: "GitHub", handle: "github.com/dayanasiles", Icon: FaGithub },
-                  { label: "Figma Community", handle: "@dayana.siles", Icon: SiFigma },
+                  { ...portfolioContent.socialLinks[0], Icon: FaLinkedinIn },
+                  { ...portfolioContent.socialLinks[1], Icon: FaGithub },
+                  { ...portfolioContent.socialLinks[2], Icon: SiFigma },
                 ].map(({ label, handle, Icon }) => (
                   <button
                     key={label}
@@ -1253,12 +1054,11 @@ function Contact({ light }: { light: boolean }) {
                   className="text-[13px] font-semibold"
                   style={{ color: BLUSH }}
                 >
-                  Currently Available
+                  {portfolioContent.sections.contact.currentlyAvailable}
                 </span>
               </div>
               <p className={`text-[12px] leading-relaxed ${t2(light)}`}>
-                Open to senior frontend roles, design system consulting, and
-                long-term remote engagements.
+                {portfolioContent.sections.contact.availabilityDescription}
               </p>
             </div>
           </div>
@@ -1282,11 +1082,11 @@ function Footer({ light }: { light: boolean }) {
           Bolivia
         </p>
         <p style={{ fontFamily: "var(--font-mono)" }}>
-          <span style={{ color: ROSE }}>Angular</span>
+          <span style={{ color: ROSE }}>{portfolioContent.footer.technologies[0]}</span>
           {" · "}
-          <span style={{ color: BLUSH }}>React</span>
+          <span style={{ color: BLUSH }}>{portfolioContent.footer.technologies[1]}</span>
           {" · "}
-          <span style={{ color: CREAM }}>Figma</span>
+          <span style={{ color: CREAM }}>{portfolioContent.footer.technologies[2]}</span>
         </p>
       </div>
     </footer>
@@ -1294,12 +1094,31 @@ function Footer({ light }: { light: boolean }) {
 }
 
 export default function App() {
-  const [light, setLight] = useState(false);
+  const [light, setLight] = useState(() => {
+    try {
+      return localStorage.getItem("portfolio-theme") === "light";
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
+    const previousBackground = document.body.style.background;
+    const previousColor = document.body.style.color;
     document.body.classList.toggle("light", light);
     document.body.style.background = light ? "#FBF6F8" : "#100B0E";
     document.body.style.color = light ? "#1A0F14" : "#F2EBED";
+    try {
+      localStorage.setItem("portfolio-theme", light ? "light" : "dark");
+    } catch {
+      // Storage may be unavailable in privacy-restricted environments.
+    }
+
+    return () => {
+      document.body.classList.remove("light");
+      document.body.style.background = previousBackground;
+      document.body.style.color = previousColor;
+    };
   }, [light]);
 
   useScrollReveal();

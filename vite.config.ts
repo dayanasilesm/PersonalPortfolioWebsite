@@ -237,9 +237,13 @@ function figmaErrorOverlayReplay(): Plugin {
     configureServer(server) {
       let lastError: object | null = null
 
-      const origSend = server.ws.send.bind(server.ws) as (...args: any[]) => void
-      server.ws.send = ((...args: any[]) => {
-        const payload = args[0]
+       type WebSocketSendArgs = Parameters<typeof server.ws.send>
+       type WebSocketSendResult = ReturnType<typeof server.ws.send>
+       const origSend = server.ws.send.bind(server.ws) as (
+         ...args: WebSocketSendArgs
+       ) => WebSocketSendResult
+       server.ws.send = ((...args: WebSocketSendArgs): WebSocketSendResult => {
+         const payload = args[0]
         if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
           const type = (payload as { type?: string }).type
           if (type === 'error') {
@@ -255,7 +259,7 @@ function figmaErrorOverlayReplay(): Plugin {
         if (lastError !== null) {
           socket.send(JSON.stringify(lastError))
         }
-      })
+       })
     },
   }
 }
