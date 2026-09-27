@@ -920,18 +920,6 @@ function Education({ light }: { light: boolean }) {
 }
 
 function Contact({ light }: { light: boolean }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
-
-  const inputCls = `w-full px-4 py-2.5 rounded-md text-[13px] border outline-none transition-all duration-150
-    focus:ring-2 focus:ring-[#C4768A]/15 focus:border-[#C4768A]/50 ${
-      light
-        ? "bg-black/[0.03] border-black/[0.09] text-[#1A0F14] placeholder-[#9A8088]"
-        : "bg-white/[0.03] border-[rgba(196,118,138,0.12)] text-[#F2EBED] placeholder-[#4A3040]"
-    }`;
-
   return (
     <section id="contact" className="py-4 px-6">
       <div className="max-w-6xl mx-auto">
@@ -942,21 +930,37 @@ function Contact({ light }: { light: boolean }) {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 max-w-4xl mx-auto mt-12">
-          <div className="card p-7 scroll-reveal delay-1">
-            {sent ? (
-              <div
-                className="flex flex-col items-center justify-center py-14 gap-4 text-center"
-                role="status"
-                aria-live="polite"
+          <div className="card p-7 scroll-reveal delay-1 flex flex-col justify-center">
+            <span
+              className={`text-[10px] font-semibold uppercase tracking-widest block mb-4 ${t2(light)}`}
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              {portfolioContent.sections.contact.contactOptionsTitle}
+            </span>
+            <h3 className={`text-2xl font-bold ${t1(light)}`} style={{ fontFamily: "var(--font-display)" }}>
+              {portfolioContent.sections.contact.sendMessage}
+            </h3>
+            <p className={`text-[13px] leading-relaxed mt-3 mb-6 ${t2(light)}`}>
+              {portfolioContent.sections.contact.contactOptionsDescription}
+            </p>
+            <div className="flex flex-col gap-3">
+              <a href={personalProfile.contact.emailUrl} className="btn btn-primary w-full">
+                <Mail size={15} />
+                {portfolioContent.sections.contact.emailAction}
+              </a>
+              <a
+                href={personalProfile.contact.whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-outline w-full"
               >
-                <div
-                  className="w-12 h-12 rounded-md flex items-center justify-center text-lg font-bold"
-                  style={{
-                    background: "rgba(196,118,138,0.10)",
-                    border: "1px solid rgba(196,118,138,0.22)",
-                    color: ROSE,
-                  }}
-                >
+                <ExternalLink size={15} />
+                {portfolioContent.sections.contact.whatsappAction}
+              </a>
+            </div>
+          </div>
+
+          {/* <div className="hidden">
                   ✓
                 </div>
                 <h3
@@ -1048,7 +1052,7 @@ function Contact({ light }: { light: boolean }) {
                 </button>
               </form>
             )}
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-4 lg:contents">
             <div className="card p-6">
