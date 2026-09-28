@@ -49,7 +49,7 @@ export const portfolioContent = {
   hero: {
     firstName: personalProfile.firstName,
     lastName: personalProfile.lastName,
-    availability: `Available · ${personalProfile.availability}`,
+    availability: `${personalProfile.availability}`,
     role: personalProfile.professionalTitle,
     summary: "Frontend Developer with over 6 years of experience designing and building enterprise web applications, with deep specialization in Angular. Proven track record modernizing legacy architectures, adopting Angular's latest features (Standalone Components, Signals, Control Flow), and integrating frontend applications with REST APIs and reactive data flows (RxJS, Observables). Strong background in reusable component design, state management (NgRx), CI/CD pipelines (Jenkins), containerized development workflows (Docker), and close collaboration with product and design teams, including experience as a Frontend Technical Lead mentoring junior developers. Combines solid engineering judgment with a UX-oriented mindset and professional working proficiency in English to deliver products that are fast, intuitive, and easy to maintain. Currently pursuing a Master's Degree in Software Product Development with Artificial Intelligence to expand into AI-driven engineering practices.",
     softwareEngineering: "Software Engineering",
@@ -64,7 +64,7 @@ export const portfolioContent = {
     skills: {
       label: "Technical Skills",
       title: "What I Build With",
-      description: "A decade of frontend craft distilled into the tools and practices that shape my work.",
+      description: "Years of frontend experience distilled into the tools, principles, and practices that shape my work.",
     },
     projects: {
       label: "Featured Projects",
@@ -131,7 +131,7 @@ export const portfolioContent = {
       typicalReplyTime: "Typical reply time",
       responseTimeValue: "< 24 hours",
       online: "Online",
-      currentlyAvailable: "Currently Available",
+      currentlyAvailable: "Work Together",
       availabilityDescription: "Open to senior frontend roles, design system consulting, and long-term remote engagements.",
     },
   },
@@ -247,12 +247,12 @@ export const portfolioContent = {
       { number: "06", title: "Dev Handoff", description: "Design tokens, Storybook docs, engineering collaboration" },
     ],
     tokens: [
-      { label: "Dusty Rose", hex: "#C4768A", token: "--rose" },
-      { label: "Blush", hex: "#E0A0B2", token: "--blush" },
-      { label: "Cream", hex: "#be6f84ff", token: "--cream" },
-      { label: "Plum", hex: "#7A3D52", token: "--plum" },
-      { label: "Surface", hex: "#1A1117", token: "--card" },
-      { label: "Border", hex: "#2A1820", token: "--border" },
+      { label: "Graphite", hex: "#18181B", token: "--graphite" },
+      { label: "Ash", hex: "#52525B", token: "--ash" },
+      { label: "Bronze", hex: "#A38051", token: "--bronze" },
+      { label: "Silver", hex: "#E4E4E7", token: "--silver" },
+      { label: "Surface", hex: "#27272A", token: "--card" },
+      { label: "Border", hex: "#3F3F46", token: "--border" },
     ],
     capabilityCards: [
       { title: "Accessibility", description: "WCAG AA/AAA" },

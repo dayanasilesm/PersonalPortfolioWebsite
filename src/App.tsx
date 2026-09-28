@@ -18,10 +18,10 @@ import { portfolioContent, type ProjectCategory } from "./data/content";
 import { personalProfile } from "./data/profile";
 import { resumeContent } from "./data/resume";
 
-const ROSE = "#C4768A";
-const BLUSH = "#E0A0B2";
-const CREAM = "#be6f84ff";
-const PLUM = "#7A3D52";
+const ROSE = "var(--color-accent)";
+const BLUSH = "var(--color-text-secondary)";
+const CREAM = "var(--color-accent-light)";
+const PLUM = "var(--color-text-primary)";
 const DISABLED_SECTIONS = new Set(["experience", "design-system"]);
 
 type Filter = "All" | ProjectCategory;
@@ -83,9 +83,10 @@ function H2({
   children: ReactNode;
   light: boolean;
 }) {
+  void light;
   return (
     <h2
-      className={`font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-3 ${light ? "text-[#1A0F14]" : "text-[#F2EBED]"}`}
+      className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mb-3 text-[var(--color-text-primary)]"
     >
       {children}
     </h2>
@@ -99,9 +100,10 @@ function Sub({
   children: ReactNode;
   light: boolean;
 }) {
+  void light;
   return (
     <p
-      className={`max-w-2xl text-[15px] leading-relaxed ${light ? "text-[#6B505A]" : "text-[#9A8088]"}`}
+      className="text-[15px] leading-relaxed text-[var(--color-text-secondary)]"
     >
       {children}
     </p>
@@ -109,11 +111,13 @@ function Sub({
 }
 
 function t1(light: boolean) {
-  return light ? "text-[#1A0F14]" : "text-[#F2EBED]";
+  void light;
+  return "text-[var(--color-text-primary)]";
 }
 
 function t2(light: boolean) {
-  return light ? "text-[#6B505A]" : "text-[#9A8088]";
+  void light;
+  return "text-[var(--color-text-secondary)]";
 }
 
 function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
@@ -129,8 +133,8 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
 
   const bg = scrolled
     ? light
-      ? "bg-[#FBF6F8]/92 border-b border-black/[0.06] shadow-sm"
-      : "bg-[#100B0E]/92 border-b border-[rgba(196,118,138,0.10)]"
+      ? "bg-[var(--color-background)] border-b border-[var(--color-border)] shadow-sm"
+      : "bg-[#18181B]/92 border-b border-[rgba(228,228,231,0.14)]"
     : "bg-transparent";
 
   return (
@@ -142,8 +146,10 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className={`font-display font-bold text-sm tracking-tight hover:opacity-70 transition-opacity ${t1(light)}`}
         >
-          <span className="g-text text-base font-extrabold">{portfolioContent.brand.initials}</span>
-          <span className={`ml-2 ${t2(light)} hidden sm:inline font-normal`}>
+          <span className="navbar-initials g-text text-base font-extrabold">
+            {portfolioContent.brand.initials}
+          </span>
+          <span className={`navbar-name ml-2 ${t2(light)} hidden sm:inline font-normal`}>
             · {portfolioContent.brand.name}
           </span>
         </button>
@@ -154,7 +160,7 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
               key={item.id}
               type="button"
               onClick={() => scrollToSection(item.id)}
-              className={`font-display px-4 py-2 rounded-md text-[13px] font-medium transition-colors duration-150 ${t2(light)} hover:opacity-70`}
+              className={`navbar-link font-display px-4 py-2 rounded-md text-[13px] font-medium transition-colors duration-150 ${t2(light)} hover:opacity-100`}
             >
               {item.label}
             </button>
@@ -169,8 +175,8 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
             aria-pressed={light}
             className={`w-8 h-8 rounded-md flex items-center justify-center transition-all ${
               light
-                ? "bg-black/[0.05] hover:bg-black/[0.09] text-[#6B505A]"
-                : "bg-white/[0.05] hover:bg-white/[0.09] text-[#9A8088]"
+                ? "bg-[var(--color-overlay)] hover:bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]"
+                : "bg-white/[0.08] hover:bg-white/[0.14] text-[#E4E4E7]"
             }`}
           >
             {light ? <Moon size={16} /> : <Sun size={16} />}
@@ -215,8 +221,8 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
           id="mobile-navigation"
           className={`md:hidden border-t px-6 py-4 flex flex-col gap-1 ${
             light
-              ? "bg-[#FBF6F8] border-black/[0.06]"
-              : "bg-[#100B0E] border-[rgba(196,118,138,0.10)]"
+              ? "bg-[var(--color-background)] border-[var(--color-border)]"
+              : "bg-[#18181B] border-[rgba(228,228,231,0.14)]"
           }`}
         >
           {NAV.map((item) => (
@@ -241,8 +247,8 @@ function Navbar({ light, onToggle }: { light: boolean; onToggle: () => void }) {
 function Hero({ light }: { light: boolean }) {
   const { pills } = portfolioContent.hero;
   const pillCls = light
-    ? "bg-black/[0.04] border border-black/[0.08] text-[#4A3040]"
-    : "bg-[rgba(196,118,138,0.06)] border border-[rgba(196,118,138,0.16)] text-[#9A8088]";
+    ? "bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B]"
+    : "bg-white/[0.06] border border-white/[0.14] text-[#E4E4E7]";
 
   return (
     <section className="relative min-h-screen flex items-center pt-16 px-6 overflow-hidden">
@@ -420,7 +426,7 @@ function Projects({ light }: { light: boolean }) {
   const selectedProject = PROJECTS.find((project) => project.id === selectedProjectId);
   const divider = light
     ? "border-black/[0.06]"
-    : "border-[rgba(196,118,138,0.10)]";
+    : "border-[var(--color-accent-18)]";
 
   return (
     <section id="projects" className="py-4 px-6">
@@ -478,8 +484,8 @@ function Projects({ light }: { light: boolean }) {
                   <span
                     className="text-[11px] font-semibold px-2.5 py-1 rounded-sm"
                     style={{
-                      background: "rgba(196,118,138,0.08)",
-                      border: "1px solid rgba(196,118,138,0.18)",
+                      background: "var(--color-accent-08)",
+                      border: "1px solid var(--color-accent-18)",
                       color: BLUSH,
                       fontFamily: "var(--font-mono)",
                     }}
@@ -525,7 +531,7 @@ function Projects({ light }: { light: boolean }) {
 
           {selectedProject && (
             <aside
-              className="card self-start w-fit max-w-full lg:max-w-[36%] p-6 h-fit shrink-0 border-[rgba(196,118,138,0.28)]"
+              className="card self-start w-fit max-w-full lg:max-w-[36%] p-6 h-fit shrink-0 border-[#D6C8B0]"
               aria-live="polite"
             >
               <div className="flex items-start justify-between gap-4 mb-4">
@@ -633,7 +639,7 @@ function DesignSystem({ light }: { light: boolean }) {
                       className="w-7 h-7 rounded-md shrink-0"
                       style={{
                         background: tk.hex,
-                        border: "1px solid rgba(196,118,138,0.15)",
+                        border: "1px solid var(--color-accent-15)",
                       }}
                     />
                     <div className="flex-1 min-w-0">
@@ -686,8 +692,8 @@ function DesignSystem({ light }: { light: boolean }) {
             <span
               className="text-[11px] px-3 py-1 rounded-md"
               style={{
-                background: "rgba(196,118,138,0.07)",
-                border: "1px solid rgba(196,118,138,0.18)",
+                background: "var(--color-accent-08)",
+                border: "1px solid var(--color-accent-18)",
                 color: ROSE,
                 fontFamily: "var(--font-mono)",
               }}
@@ -709,8 +715,8 @@ function DesignSystem({ light }: { light: boolean }) {
             <span
               className="text-[11px] font-semibold px-2.5 py-1.5 rounded-sm"
               style={{
-                background: "rgba(196,118,138,0.08)",
-                border: "1px solid rgba(196,118,138,0.18)",
+                background: "var(--color-accent-08)",
+                border: "1px solid var(--color-accent-18)",
                 color: BLUSH,
                 fontFamily: "var(--font-mono)",
               }}
@@ -720,8 +726,8 @@ function DesignSystem({ light }: { light: boolean }) {
             <span
               className="text-[11px] font-semibold px-2.5 py-1.5 rounded-sm"
               style={{
-                background: "rgba(245,208,218,0.08)",
-                border: "1px solid rgba(245,208,218,0.18)",
+                background: "var(--color-surface-muted)",
+                border: "1px solid var(--color-border)",
                 color: CREAM,
                 fontFamily: "var(--font-mono)",
               }}
@@ -733,9 +739,9 @@ function DesignSystem({ light }: { light: boolean }) {
               placeholder={portfolioContent.sections.designSystem.searchPlaceholder}
               className={`px-4 py-2 rounded-md text-[13px] border outline-none transition-all ${
                 light
-                  ? "bg-black/[0.03] border-black/[0.1] text-[#1A0F14] placeholder-[#9A8088]"
-                  : "bg-white/[0.03] border-[rgba(196,118,138,0.14)] text-[#F2EBED] placeholder-[#4A3040]"
-              } focus:border-[#C4768A]/50 focus:ring-2 focus:ring-[#C4768A]/10`}
+                  ? "bg-[#FAFAFA] border-[#E4E4E7] text-[#18181B] placeholder-[#71717A]"
+                  : "bg-white/[0.03] border-[rgba(228,228,231,0.14)] text-[#FAFAFA] placeholder-[#D4D4D8]"
+              } focus:border-[#A38051]/50 focus:ring-2 focus:ring-[#A38051]/10`}
             />
             <div className="flex items-center gap-2">
               <div
@@ -753,8 +759,8 @@ function DesignSystem({ light }: { light: boolean }) {
           <div
             className="flex items-start gap-2.5 p-4 rounded-md"
             style={{
-              background: "rgba(196,118,138,0.05)",
-              border: "1px solid rgba(196,118,138,0.14)",
+              background: "var(--color-accent-05)",
+              border: "1px solid var(--color-accent-14)",
             }}
           >
             <ShieldCheck size={18} className="shrink-0 mt-0.5" style={{ color: ROSE }} />
@@ -799,7 +805,7 @@ function Experience({ light }: { light: boolean }) {
                   <div
                     className="w-7 h-7 rounded-full flex items-center justify-center transition-all"
                     style={{
-                      background: item.type === "work" ? "rgba(196,118,138,0.12)" : "rgba(122,61,82,0.2)",
+                      background: item.type === "work" ? "var(--color-accent-12)" : "var(--color-overlay)",
                       border: `1px solid ${item.type === "work" ? ROSE : PLUM}`,
                       color: item.type === "work" ? ROSE : BLUSH,
                       boxShadow: item.current ? `0 0 12px ${ROSE}50` : "none",
@@ -813,7 +819,7 @@ function Experience({ light }: { light: boolean }) {
                   className="flex-1 card p-5"
                   style={
                     item.current
-                      ? { borderColor: "rgba(196,118,138,0.28)" }
+                      ? { borderColor: "var(--color-accent-28)" }
                       : {}
                   }
                 >
@@ -837,8 +843,8 @@ function Experience({ light }: { light: boolean }) {
                         <span
                           className="text-[10px] font-bold px-2 py-0.5 rounded-sm"
                           style={{
-                            background: "rgba(196,118,138,0.10)",
-                            border: "1px solid rgba(196,118,138,0.22)",
+                            background: "var(--color-accent-10)",
+                            border: "1px solid var(--color-accent-22)",
                             color: ROSE,
                             fontFamily: "var(--font-mono)",
                           }}
@@ -889,7 +895,7 @@ function Education({ light }: { light: boolean }) {
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                   style={{
-                    background: "rgba(122,61,82,0.2)",
+                    background: "var(--color-overlay)",
                     border: `1px solid ${PLUM}`,
                     color: BLUSH,
                   }}
@@ -1087,7 +1093,7 @@ function Contact({ light }: { light: boolean }) {
                 ].map(({ label, value, sub }) => (
                   <div
                     key={label}
-                    className={`pb-4 border-b last:border-0 last:pb-0 ${light ? "border-black/[0.06]" : "border-[rgba(196,118,138,0.08)]"}`}
+                    className={`pb-4 border-b last:border-0 last:pb-0 ${light ? "border-[#E4E4E7]" : "border-[rgba(228,228,231,0.12)]"}`}
                   >
                     <p
                       className={`text-[10px] font-semibold uppercase tracking-widest mb-1 ${t2(light)}`}
@@ -1126,16 +1132,16 @@ function Contact({ light }: { light: boolean }) {
                     rel="noreferrer"
                     className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition-all duration-150 ${
                       light
-                        ? "border-black/[0.06] hover:border-[rgba(196,118,138,0.3)]"
-                        : "border-[rgba(196,118,138,0.10)] hover:border-[rgba(196,118,138,0.25)]"
+                        ? "border-[#E4E4E7] hover:border-[#C8B99D]"
+                        : "border-[rgba(228,228,231,0.14)] hover:border-[rgba(200,185,157,0.5)]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
                         style={{
-                          background: "rgba(196,118,138,0.08)",
-                          border: "1px solid rgba(196,118,138,0.16)",
+                          background: "var(--color-accent-08)",
+                          border: "1px solid var(--color-accent-16)",
                           color: ROSE,
                         }}
                       >
@@ -1157,8 +1163,8 @@ function Contact({ light }: { light: boolean }) {
             <div
               className="rounded-md p-5"
               style={{
-                background: "rgba(196,118,138,0.05)",
-                border: "1px solid rgba(196,118,138,0.15)",
+                background: "var(--color-accent-05)",
+                border: "1px solid var(--color-accent-15)",
                 height: "fit-content",
               }}
             >
@@ -1188,7 +1194,7 @@ function Contact({ light }: { light: boolean }) {
 function Footer({ light }: { light: boolean }) {
   const border = light
     ? "border-black/[0.07]"
-    : "border-[rgba(196,118,138,0.08)]";
+    : "border-[rgba(228,228,231,0.12)]";
   return (
     <footer className={`py-8 px-6 border-t ${border}`}>
       <div
@@ -1210,7 +1216,7 @@ function Footer({ light }: { light: boolean }) {
 export default function App() {
   const [light, setLight] = useState(() => {
     try {
-      return localStorage.getItem("portfolio-theme") === "light";
+      return localStorage.getItem("portfolio-theme") !== "dark";
     } catch {
       return false;
     }
@@ -1220,8 +1226,8 @@ export default function App() {
     const previousBackground = document.body.style.background;
     const previousColor = document.body.style.color;
     document.body.classList.toggle("light", light);
-    document.body.style.background = light ? "#FBF6F8" : "#100B0E";
-    document.body.style.color = light ? "#1A0F14" : "#F2EBED";
+    document.body.style.background = "var(--color-background)";
+    document.body.style.color = "var(--color-text-primary)";
     try {
       localStorage.setItem("portfolio-theme", light ? "light" : "dark");
     } catch {

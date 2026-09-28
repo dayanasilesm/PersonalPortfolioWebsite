@@ -2,7 +2,7 @@ import profilePhoto from "../assets/images/my-photo.jpg";
 import cvFile from "../assets/docs/Dayana_Siles_CV_of.pdf";
 
 const whatsappMessage =
-  "Hi, I want to communicate with you to coordinate a meeting to talk about my ideas for my project";
+  `Hi! I’d like to get in touch with you to schedule a meeting and discuss some ideas for my project.`;
 
 export const personalProfile = {
   firstName: "Dayana Alice",
@@ -14,11 +14,11 @@ export const personalProfile = {
   email: "dayana.siles.m@gmail.com",
   phone: "+59169471893",
   location: "Cochabamba, Bolivia",
-  availability: "Remote / Full-time available",
+  availability: "Remote / Full-time",
   contact: {
     whatsappMessage,
     whatsappUrl: `https://wa.me/59169471893?text=${encodeURIComponent(whatsappMessage)}`,
-    emailUrl: `mailto:dayana.siles.m@gmail.com?subject=${encodeURIComponent("Portfolio contact")}&body=${encodeURIComponent("Hi Dayana, I would like to talk with you about a project.")}`,
+    emailUrl: `mailto:dayana.siles.m@gmail.com?subject=${encodeURIComponent("Portfolio contact")}&body=${encodeURIComponent(whatsappMessage)}`,
   },
   photo: profilePhoto,
   photoAlt: "Dayana Alice Siles Miranda",
