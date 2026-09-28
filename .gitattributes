@@ -81,6 +81,10 @@
 *.woff2              filter=lfs diff=lfs merge=lfs -text
 *.eot                filter=lfs diff=lfs merge=lfs -text
 
+# Keep the portfolio's small public assets in Git so GitHub Pages can serve them directly.
+src/assets/images/my-photo.jpg -filter -diff -merge
+src/assets/docs/Dayana_Siles_CV_of.pdf -filter -diff -merge
+
 # ---------------------------------------------------------------------------
 # Data & Machine Learning
 # ---------------------------------------------------------------------------
